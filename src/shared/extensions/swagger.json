@@ -1,0 +1,254 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Auth",
+    "description": "API de registro e autenticação de usuários",
+    "termsOfService": "https://policies.google.com/terms?hl=pt-BR",
+    "contact": {
+      "email": "suporte@streamline.com.br"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5100",
+      "description": "API de testes"
+    },
+    {
+      "url": "https:/www.atlas-auth.com.br/v1",
+      "description": "API de produção"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Token",
+        "description": "Rota responsável por gerar o Token",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
+              },
+              "examples": {
+                "token": {
+                  "value": {
+                    "email": "johndoe@fakemail.com",
+                    "password": "Jd123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Incorrect email or password"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Auth"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+      "summary": "Create User",
+      "description": "Rota responsável pelo registro de usuário",
+      "tags": ["Users"],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            },
+            "examples": {
+              "user": {
+                "value": {
+                  "name": "John Doe",
+                  "email": "johndoe@fakemail.com",
+                  "password": "Jd123456",
+                  "isAdmin": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "400": {
+          "description": "User already exists!"
+        },
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+      },
+      "get": {
+      "summary": "List Users",
+      "description": "Rota para listar todos os usuários",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "users",
+          "in": "path",
+          "description": "Execute para listar todos",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "List UserID",
+        "description": "Rota para listar usuário pelo ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Informe o ID do usuário",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update UserID",
+        "description": "Rota para atualizar o usuário pelo ID",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Informe o ID do usuário",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "John Wayne",
+                    "email": "johnwayne@fakemail.com",
+                    "password": "Jw123456",
+                    "isAdmin": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Auth": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "isAdmin": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

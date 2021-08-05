@@ -1,0 +1,56 @@
+version: '3'
+
+networks:
+  net:
+    driver: bridge
+
+services:
+  app:
+    build: .
+    container_name: atlas-auth
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - pgdb
+    working_dir: /usr/app/
+    networks:
+      - net
+    ports: 
+      - ${API_PORT}:${API_PORT}
+
+  pgdb:
+    image: postgres:latest
+    container_name: pgdb-auth
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '${DB_PORT}:5432'
+    networks:
+      - net
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: /data/postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    container_name: pgadmin_container
+    ports:
+      - "5050:80"
+    networks:
+      - net
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+
+volumes:
+  data:
