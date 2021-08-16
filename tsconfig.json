@@ -6,6 +6,7 @@
     "strictPropertyInitialization": false,
     "typeRoots": ["./node_modules/@types","./src/@types"],
     "baseUrl": "./src",
+    "outDir": "./dist",
     "paths": {
       "@config/*": ["config/*"],
       "@modules/*": ["modules/*"],
@@ -17,11 +18,16 @@
       "@utils/*": ["utils/*"]
     },
     "esModuleInterop": true,
-    "outDir": "./dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

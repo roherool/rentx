@@ -27,7 +27,7 @@ describe('Send Forgot Mail', () => {
   })
 
   it('should be able to send a forgot password mail to user', async () => {
-    const sendMail = spyOn(mailProvider, 'sendMail')
+    const sendMail = jest.spyOn(mailProvider, 'sendMail')
 
     await userRepositoryInMemory.create({
       name: 'John Doe',
@@ -47,7 +47,7 @@ describe('Send Forgot Mail', () => {
   })
 
   it('should be able to create an users token', async () => {
-    const generateTokenMail = spyOn(userTokenRepositoryInMemory, 'create')
+    const generateTokenMail = jest.spyOn(userTokenRepositoryInMemory, 'create')
 
     await userRepositoryInMemory.create({
       name: 'Mary Doe',
