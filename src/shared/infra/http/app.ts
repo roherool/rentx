@@ -5,6 +5,7 @@ import "express-async-errors";
 import cors from "cors";
 import logger from "morgan";
 import swaggerUI from "swagger-ui-express";
+// import Sentry from "@sentry/node";
 
 import "@shared/container";
 import upload from "@config/upload";
@@ -15,6 +16,7 @@ import rateLimiter from "./middlewares/rateLimiter";
 import createConnection from "@shared/infra/typeorm/connect";
 
 import { router } from "./routes";
+// import { sentry } from "@shared/extensions/sentry";
 
 createConnection();
 
@@ -25,7 +27,12 @@ class App {
     this.app = express();
     this.middlewares();
     this.routes();
+    // this.sentrys()
   }
+
+  // private sentrys() {
+  //   this.app.use(sentry());
+  // }
 
   private middlewares(): void {
     this.app.use(rateLimiter);
@@ -37,6 +44,10 @@ class App {
     this.app.use("/avatar", express.static(`${upload.tmpFolder}/avatar`));
 
     this.app.use(cors());
+
+    // this.app.use(Sentry.Handlers.requestHandler());
+    // this.app.use(Sentry.Handlers.tracingHandler());
+    // this.app.use(Sentry.Handlers.errorHandler());
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       res.header("Access-Controll-Allow_Origin", "*");
