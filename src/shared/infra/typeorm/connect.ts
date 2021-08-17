@@ -1,20 +1,13 @@
-import { Connection, createConnection, getConnectionOptions } from "typeorm";
+import { createConnection, getConnectionOptions } from "typeorm";
 
-export default async (): Promise<Connection> => {
-  const defaultOptions = await getConnectionOptions();
+interface IOptions {
+  host: string;
+}
 
-  return createConnection(
-    Object.assign(defaultOptions, {
-      database:
-        process.env.NODE_ENV === "test" ? "pgdb-test" : defaultOptions.database,
-    })
-  );
-};
-
-// import { createConnection, getConnectionOptions } from 'typeorm'
-
-// getConnectionOptions().then(options => {
-//   createConnection(Object.assign(options, {
-//     host: 'pgdb'
-//   })).then(() => console.log('📦 Database connected successfully'))
-// });
+getConnectionOptions().then((options) => {
+  const newOptions = options as IOptions;
+  newOptions.host = "database";
+  createConnection({
+    ...options,
+  }).then(() => console.log("📦 Database connected successfully"));
+});

@@ -1,4 +1,4 @@
-import { IMailProvider } from "../MailProvider/IMailProvider";
+import { IMailProvider } from "../IMailProvider";
 
 class MailProviderInMemory implements IMailProvider {
   private message: any[] = []

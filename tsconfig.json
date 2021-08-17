@@ -11,10 +11,7 @@
       "@config/*": ["config/*"],
       "@modules/*": ["modules/*"],
       "@shared/*": ["shared/*"],
-      "@container/*": ["shared/container/*"],
       "@errors/*": ["shared/errors/*"],
-      "@extensions/*": ["shared/extensions/*"],
-      "@infra/*": ["shared/infra/*"],
       "@utils/*": ["utils/*"]
     },
     "esModuleInterop": true,

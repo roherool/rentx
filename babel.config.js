@@ -11,10 +11,7 @@ module.exports = {
           "@config": "./src/config",
           "@modules": "./src/modules",
           "@shared": "./src/shared",
-          "@container": "./src/shared/container",
           "@errors": "./src/shared/errors",
-          "@extensions": "./src/shared/extensions",
-          "@infra": "./src/shared/infra",
           "@utils": "./src/utils"
         }
       }

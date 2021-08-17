@@ -1,9 +1,10 @@
 node_modules
 .vscode
-coverage
-ormconfig.json
-dist
-requirements
 tmp/*
-!tmp/.gitkeep
+coverage
 .env
+requirements
+!tmp/.gitkeep
+dist
+ormconfig.json
+package-lock.json

@@ -5,49 +5,55 @@ import "express-async-errors";
 import cors from "cors";
 import logger from "morgan";
 import swaggerUI from "swagger-ui-express";
-// import Sentry from "@sentry/node";
+import Sentry from "@sentry/node";
+import Tracing from "@sentry/tracing";
 
 import "@shared/container";
+import "@shared/infra/typeorm/connect";
+
 import upload from "@config/upload";
-import swaggerFile from "@extensions/swagger.json";
+import swaggerFile from "@shared/extensions/swagger.json";
 import { AppError } from "@errors/AppError";
 
 import rateLimiter from "./middlewares/rateLimiter";
-import createConnection from "@shared/infra/typeorm/connect";
 
 import { router } from "./routes";
-// import { sentry } from "@shared/extensions/sentry";
-
-createConnection();
 
 class App {
   public app: express.Application;
+  public sentry: any;
 
   public constructor() {
     this.app = express();
-    this.middlewares();
-    this.routes();
-    // this.sentrys()
-  }
+    
+    this.sentry = Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Tracing.Integrations.Express({ app: this.app }),
+      ],
+      tracesSampleRate: 1.0,
+    });
 
-  // private sentrys() {
-  //   this.app.use(sentry());
-  // }
+    this.middlewares();
+  }
 
   private middlewares(): void {
     this.app.use(rateLimiter);
     this.app.use(express.json());
     this.app.use(logger("dev"));
 
+    this.app.use(this.sentry.Handlers.requestHandler());
+    this.app.use(this.sentry.Handlers.tracingHandler());
+
     this.app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
     this.app.use("/avatar", express.static(`${upload.tmpFolder}/avatar`));
 
     this.app.use(cors());
+    this.app.use(router);
 
-    // this.app.use(Sentry.Handlers.requestHandler());
-    // this.app.use(Sentry.Handlers.tracingHandler());
-    // this.app.use(Sentry.Handlers.errorHandler());
+    this.app.use(this.sentry.Handlers.errorHandler());
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       res.header("Access-Controll-Allow_Origin", "*");
@@ -76,10 +82,6 @@ class App {
         });
       }
     );
-  }
-
-  private routes(): void {
-    this.app.use(router);
   }
 }
 

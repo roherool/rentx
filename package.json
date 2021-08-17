@@ -7,8 +7,8 @@
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules --respawn src/shared/infra/http/server.ts",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "seed": "ts-node-dev src/infra/typeorm/seeders/*.ts",
-    "test": "jest"
+    "seed": "ts-node-dev -r tsconfig-paths/register src/shared/infra/typeorm/seeders/*.ts",
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

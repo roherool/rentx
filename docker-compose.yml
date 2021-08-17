@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 networks:
   atlas-net:
@@ -21,7 +21,7 @@ services:
     working_dir: /usr/app/
     networks:
       - atlas-net
-    ports: 
+    ports:
       - ${API_PORT}:${API_PORT}
 
   database:
@@ -31,7 +31,7 @@ services:
     env_file:
       - .env
     ports:
-      - '${DB_PORT}:5432'
+      - "${DB_PORT}:5432"
     networks:
       - atlas-net
     environment:
@@ -40,8 +40,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
       PGDATA: /data/postgres
     volumes:
-      - data:/var/lib/postgresql/data
-  
+      - postgres_data:/var/lib/postgresql/data
+
   redis:
     image: redis:alpine
     container_name: redis-auth
@@ -49,12 +49,12 @@ services:
     networks:
       - atlas-net
     ports:
-      - '${REDIS_PORT}:6379'
+      - "${REDIS_PORT}:6379"
     volumes:
-      - redisdata:/data/redis
+      - redis_data:/data/redis
 
 volumes:
-  data:
+  postgres_data:
     driver: local
-  redisdata:
+  redis_data:
     driver: local

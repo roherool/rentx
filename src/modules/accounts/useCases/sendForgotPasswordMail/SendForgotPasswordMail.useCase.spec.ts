@@ -1,6 +1,6 @@
 import { AppError } from "@shared/errors/AppError"
-import { DayjsDateProvider } from "@shared/providers/DateProvider/DayjsDateProvider"
-import { MailProviderInMemory } from "@shared/providers/in-memory/MailProviderInMemory"
+import { DateProvider } from "@shared/providers/DateProvider/implementations/DateProvider"
+import { MailProviderInMemory } from "@shared/providers/MailProvider/in-memory/MailProviderInMemory"
 import { UserRepositoryInMemory } from "@modules/accounts/iRepositories/in-memory/UserRepositoryInMemory"
 import { UserTokensRepositoryInMemory } from "@modules/accounts/iRepositories/in-memory/UserTokensRepositoryInMemory"
 import { SendForgotPasswordMailUseCase } from "./SendForgotPasswordMail.useCase"
@@ -8,14 +8,14 @@ import { SendForgotPasswordMailUseCase } from "./SendForgotPasswordMail.useCase"
 let userRepositoryInMemory: UserRepositoryInMemory
 let userTokenRepositoryInMemory: UserTokensRepositoryInMemory
 let sendForgotPasswordMailService: SendForgotPasswordMailUseCase
-let dateProvider: DayjsDateProvider
+let dateProvider: DateProvider
 let mailProvider: MailProviderInMemory
 
 
 describe('Send Forgot Mail', () => {
   beforeEach(() => {
     userRepositoryInMemory = new UserRepositoryInMemory()
-    dateProvider = new DayjsDateProvider()
+    dateProvider = new DateProvider()
     userTokenRepositoryInMemory = new UserTokensRepositoryInMemory()
     mailProvider = new MailProviderInMemory()
     sendForgotPasswordMailService = new SendForgotPasswordMailUseCase(

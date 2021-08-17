@@ -1,7 +1,7 @@
 import http from "http";
 const debug = require("debug")("nodestr:server");
 
-import app from "@infra/http/app";
+import app from "@shared/infra/http/app";
 
 debug("ts-express:server");
 
