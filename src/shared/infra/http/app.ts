@@ -5,8 +5,8 @@ import "express-async-errors";
 import cors from "cors";
 import logger from "morgan";
 import swaggerUI from "swagger-ui-express";
-import Sentry from "@sentry/node";
-import Tracing from "@sentry/tracing";
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
 
 import "@shared/container";
 import "@shared/infra/typeorm/connect";
@@ -21,12 +21,11 @@ import { router } from "./routes";
 
 class App {
   public app: express.Application;
-  public sentry: any;
 
   public constructor() {
     this.app = express();
     
-    this.sentry = Sentry.init({
+    Sentry.init({
       dsn: process.env.SENTRY_DSN,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
@@ -43,8 +42,8 @@ class App {
     this.app.use(express.json());
     this.app.use(logger("dev"));
 
-    this.app.use(this.sentry.Handlers.requestHandler());
-    this.app.use(this.sentry.Handlers.tracingHandler());
+    this.app.use(Sentry.Handlers.requestHandler());
+    this.app.use(Sentry.Handlers.tracingHandler());
 
     this.app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
@@ -53,7 +52,7 @@ class App {
     this.app.use(cors());
     this.app.use(router);
 
-    this.app.use(this.sentry.Handlers.errorHandler());
+    this.app.use(Sentry.Handlers.errorHandler());
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       res.header("Access-Controll-Allow_Origin", "*");
