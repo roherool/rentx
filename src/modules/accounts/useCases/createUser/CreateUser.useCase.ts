@@ -13,9 +13,11 @@ class CreateUserUseCase {
     private userRepo: IUserRepository) {}
 
   async execute({ 
+    id,
     name, 
     email, 
     password,
+    avatar,
     isAdmin
   }: IUserDto): Promise<void> {
 
@@ -32,9 +34,11 @@ class CreateUserUseCase {
     const passwordHash = await hash(password, 8)
 
     await this.userRepo.create({
+      id,
       name,
       email,
       password: passwordHash,
+      avatar,
       isAdmin
     })
   }

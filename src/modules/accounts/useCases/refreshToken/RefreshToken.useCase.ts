@@ -19,8 +19,8 @@ interface ITokenResponse {
 @injectable()
 class RefreshTokenUseCase {
   constructor(
-    @inject('UserTokenRepo')
-    private userTokenRepo: IUserTokensRepository,
+    @inject('UserTokensRepo')
+    private userTokensRepo: IUserTokensRepository,
     @inject('DateProvider')
     private dateProvider: IDateProvider
   ) {}
@@ -30,7 +30,7 @@ class RefreshTokenUseCase {
     
     const userId = sub
 
-    const userToken = await this.userTokenRepo.findByUserIdAndRefreshToken(
+    const userToken = await this.userTokensRepo.findByUserIdAndRefreshToken(
       userId, 
       token
     )
@@ -39,7 +39,7 @@ class RefreshTokenUseCase {
       throw new AppError("Refresh Token doesn't exists!")
     }
 
-    await this.userTokenRepo.deleteById(userToken.id)
+    await this.userTokensRepo.deleteById(userToken.id)
 
     const refreshToken = sign({ email }, auth.secret_refresh_token, {
       subject: sub,
@@ -50,7 +50,7 @@ class RefreshTokenUseCase {
       auth.expires_refresh_token_days
     )
 
-    await this.userTokenRepo.create({
+    await this.userTokensRepo.create({
       refreshToken,
       expiresDate,
       userId

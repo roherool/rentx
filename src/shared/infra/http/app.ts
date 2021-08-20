@@ -74,7 +74,8 @@ class App {
             error: err.message,
           });
         }
-
+        console.log(err)
+        
         return res.status(500).json({
           status: "error",
           message: "Internal Server Error",
