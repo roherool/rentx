@@ -29,7 +29,7 @@ class SendForgotPasswordMailUseCase {
       "..",
       "..",
       "views",
-      "email",
+      "emails",
       "forgotPassword.hbs"
     );
 
